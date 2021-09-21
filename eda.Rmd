@@ -7,21 +7,58 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library("ggplot2")
 ```
 
 # Research question
+Is cell uniformity (shape and size) a good predictor for the malignancy of breast cancer?
+
+Attributes definitions: https://www.rai-light.com/docs/BCD_User_Manual_v01.pdf
 
 
 ```{r}
 data <- read.csv("breast-cancer-wisconsin.data", na.strings="?")
-colnames(data) <- c("id", "Clump Thickness", "Cell Size Uniformity", "Cell Shape Uniformity", "Marginal Adhesion",
-                    "Single Epithelial Cell Size", "Bare Nuclei", "Bland Chromatin", "Normal Nucleoli", "Mitoses",
+colnames(data) <- c("id", "Clump_Thickness", "Cell_Size_Uniformity", "Cell_Shape_Uniformity", "Marginal_Adhesion",
+                    "Single_Epithelial_Cell_Size", "Bare_Nuclei", "Bland_Chromatin", "Normal_Nucleoli", "Mitoses",
                     "Class")
+
 head(data, 10)
 summary(data)
+```
 
+Let us take a look at the highest correlating features.
+```{r}
 cor_data <- cor(data, use = "complete.obs")
 cor_data <- as.data.frame(cor_data)
-cor_cols <- names(cor_data)[which(cor_data[,0] > 0.1)]
+cor_cols <- names(cor_data)[which(cor_data$Class > 0.8)]
 cor_cols 
 ```
+There are 3 attributes that correlate with malignancy for more than 80%, 2 of which are pertaining to cell uniformity. This bodes well for the hypothesis that cell uniformity could potentially be a good predictor of malignant breast cancer.
+
+```{r}
+plot_data <- data
+plot_data$Class[plot_data$Class == 2] <- "B"
+plot_data$Class[plot_data$Class == 4] <- "M"
+
+ggplot(data=plot_data, mapping = aes(x = Class, y = Cell_Size_Uniformity)) +
+  geom_jitter(width = 0.05, height = 0.3, col="red", alpha = 0.3) +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data=plot_data, mapping = aes(x = Class, y = Cell_Shape_Uniformity)) +
+  geom_jitter(width = 0.05, height = 0.3, col="green", alpha = 0.3) +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data=plot_data, mapping = aes(x = Class, y = Bare_Nuclei)) +
+  geom_jitter(width = 0.05, height = 0.3, col="blue", alpha = 0.3) +
+  theme_minimal()
+```
+
+
+
+
+
+
