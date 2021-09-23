@@ -7,7 +7,8 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library("ggplot2")
+library(ggplot2)
+library(reshape2)
 ```
 
 # Research question
@@ -42,20 +43,90 @@ plot_data$Class[plot_data$Class == 4] <- "M"
 
 ggplot(data=plot_data, mapping = aes(x = Class, y = Cell_Size_Uniformity)) +
   geom_jitter(width = 0.05, height = 0.3, col="red", alpha = 0.3) +
-  theme_minimal()
+  labs(y="Cell Size Uniformity", 
+       caption="Figure 1: Cell size uniformity spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
 ```
 
 ```{r}
 ggplot(data=plot_data, mapping = aes(x = Class, y = Cell_Shape_Uniformity)) +
   geom_jitter(width = 0.05, height = 0.3, col="green", alpha = 0.3) +
-  theme_minimal()
+  labs(y="Cell Shape Uniformity", 
+       caption="Figure 2: Cell shape uniformity spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
 ```
 
 ```{r}
 ggplot(data=plot_data, mapping = aes(x = Class, y = Bare_Nuclei)) +
   geom_jitter(width = 0.05, height = 0.3, col="blue", alpha = 0.3) +
-  theme_minimal()
+  labs(y="Nuclei With Cytoplasm", 
+       caption="Figure 3: Bare nuclei spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
 ```
+
+It looks like these 3 attributes correlate quite strongly not only with the class, but also with each other. It would make sense for cell shape and size uniformity to covariate, but let us put it into perspective. 
+
+```{r}
+ggplot(data=plot_data, mapping = aes(x = Cell_Size_Uniformity, y = Cell_Shape_Uniformity)) +
+  geom_point(aes(col=Class)) +
+  geom_smooth(method = "lm", se = T) +
+  labs(y="Cell Shape Uniformity", x="Cell Size Uniformity", 
+       caption="Figure 4: Plot of the correlation between cell shape and size discrepancies") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+Unsurprisingly, it does seem to be the case that the larger the differences in size between cells, the larger the differences in shapes as well. This makes sense as both these differences can be explained by erratic cell growth. Let us take a look however, at the correlations between cell uniformity and nuclei with cytoplasm.
+
+
+```{r}
+ggplot(data=plot_data, mapping = aes(x = Cell_Size_Uniformity, y = Bare_Nuclei)) +
+  geom_point(aes(col=Class)) +
+  geom_smooth(method = "lm", se = T) +
+  labs(y="Nuclei With Cytoplasm", x="Cell Size Uniformity", 
+       caption="Figure 5: Plot of the correlation between nuclei with cytoplasm and cell size uniformity.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+
+```{r}
+ggplot(data=plot_data, mapping = aes(x = Cell_Shape_Uniformity, y = Bare_Nuclei)) +
+  geom_point(aes(col=Class)) +
+  geom_smooth(method = "lm", se = T) +
+  labs(y="Nuclei With Cytoplasm", x="Cell Shape Uniformity", 
+       caption="Figure 6: Plot of the correlation between nuclei with cytoplasm and cell shape uniformity.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+Let us make a heatmap of the entire dataset, to make sure we did not miss any other highly correlating attributes with our 80% cut-off.
+
+```{r}
+cor_matrix <- round(cor(na.omit(data[,-1])),2)
+melted_cor_matrix <- melt(cor_matrix)
+
+ggplot(data = melted_cor_matrix, aes(x=Var1, y=Var2, fill=value, )) + 
+  geom_tile() +
+  labs(y="", x="", 
+       caption="Figure 7: Heatmap showing the correlations between all attributes.") +
+  scale_fill_gradient(low="black", high="red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1)) +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+We can clearly see cell uniformity and bare nuclei at the top, but it looks like all features correlate at least somewhat, with bland chromatin seemingly at the top of the sub-80% attributes with a correlation to class of roughly 76%. The heatmap also confirms the correlation between cell size and shape uniformity.
+
 
 
 
