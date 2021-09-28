@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(reshape2)
 ```
@@ -37,7 +37,7 @@ colnames(data) <- c("id", "Clump_Thickness", "Cell_Size_Uniformity", "Cell_Shape
 # head(data, 10)
 summary(data)
 ```
-We can see the data does not follow a normal distribution.
+We can see the data does not follow a normal distribution, this becomes apparent when you compare the column means to the medians.
 
 
 Let us take a look at the highest correlating features by only taking the data columns that correlate with malignancy for more than 80%.
@@ -155,6 +155,23 @@ ggplot(data=plot_data, mapping = aes(x = Class, y = Bland_Chromatin)) +
 ```
 
 This seems to somewhat mimic the spreads of the top 3 correlating features, albeit to a slightly lesser degree. Take note that a grade of 10 on the bland chromatin attribute means that the chromatin is maximally coarse and a 1 stands for very finely textured chromatin.
+
+
+There seem to be some duplicate entries in the data set, to remedy this I shall only take the unique rows.
+```{r}
+clean_data <- unique(plot_data)
+```
+It is important to get rid of duplicates like these, because they increase the weight of their corresponding attribute values.
+
+As could be seen in the heatmap in figure 7, mitosis has by far the lowest correlation with malignancy and will therefore be removed from the data set. Aside from this, it is also unclear what "abnormal" mitosis means exactly.
+As for the normal nucleoli attribute, its precise definition is unclear. A grade of 1, which is to say a "normal" nucleolus, is defined as being small and barely visible. There is zero clarification, however, of how a nucleolus starts to differ when looking at the higher grades. One can assume that there might then be multiple nucleoli, or they might be larger, but this is never quantified. I deem this too unclear and shall also remove this column from the data set.
+```{r}
+clean_data$Mitoses <- NULL
+clean_data$Normal_Nucleoli <- NULL
+```
+
+
+
 
 
 
