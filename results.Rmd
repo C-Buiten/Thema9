@@ -1,0 +1,133 @@
+---
+title: "Results/Conclusion"
+author: "Carlo van Buiten"
+date: "10/6/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(reshape2)
+```
+
+\newpage
+
+```{r, warning=FALSE, message=FALSE}
+data <- read.csv("breast-cancer-wisconsin.data", na.strings="?")
+colnames(data) <- c("id", "Clump_Thickness", "Cell_Size_Uniformity", "Cell_Shape_Uniformity", "Marginal_Adhesion",
+                    "Single_Epithelial_Cell_Size", "Bare_Nuclei", "Bland_Chromatin", "Normal_Nucleoli", "Mitoses",
+                    "Class")
+
+cor_data <- cor(data, use = "complete.obs")
+cor_data <- as.data.frame(cor_data)
+cor_cols <- names(cor_data)[which(cor_data$Class > 0.8)]
+
+plot_data <- data
+plot_data$Class[plot_data$Class == 2] <- "B"
+plot_data$Class[plot_data$Class == 4] <- "M"
+
+clean_data <- unique(plot_data)
+clean_data$Mitoses <- NULL
+clean_data$Normal_Nucleoli <- NULL
+
+```
+
+## Research question
+Is cell uniformity (shape and size) a good predictor for the malignancy of breast cancer?
+
+
+
+## Results
+
+```{r, warning=FALSE, message=FALSE}
+cor_matrix <- round(cor(na.omit(data[,-1])),2)
+melted_cor_matrix <- melt(cor_matrix)
+
+ggplot(data = melted_cor_matrix, aes(x=Var1, y=Var2, fill=value, )) + 
+  geom_tile() +
+  labs(y="", x="", 
+       caption="Figure 1: Heatmap showing the correlations between all attributes.") +
+  scale_fill_gradient(low="black", high="red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1)) +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+As can be seen in figure 1, there are 4 attributes that correlate with malignancy (class) for more than 75%, 2 of which are pertaining to cell uniformity. These attributes are cell size uniformity, cell shape uniformity, bare nuclei and bland chromatin. The spreads for these attributes can be seen in figures 2 through 5.
+
+```{r, warning=FALSE, message=FALSE}
+plot_data <- data
+plot_data$Class[plot_data$Class == 2] <- "B"
+plot_data$Class[plot_data$Class == 4] <- "M"
+
+ggplot(data=plot_data, mapping = aes(x = Class, y = Cell_Size_Uniformity)) +
+  geom_jitter(width = 0.05, height = 0.3, col="red", alpha = 0.3) +
+  labs(y="Cell Size Uniformity", 
+       caption="Figure 2: Cell size uniformity spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+```{r, warning=FALSE, message=FALSE}
+ggplot(data=plot_data, mapping = aes(x = Class, y = Cell_Shape_Uniformity)) +
+  geom_jitter(width = 0.05, height = 0.3, col="green", alpha = 0.3) +
+  labs(y="Cell Shape Uniformity", 
+       caption="Figure 3: Cell shape uniformity spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+```{r, warning=FALSE, message=FALSE}
+ggplot(data=plot_data, mapping = aes(x = Class, y = Bare_Nuclei)) +
+  geom_jitter(width = 0.05, height = 0.3, col="blue", alpha = 0.3) +
+  labs(y="Nuclei With Cytoplasm", 
+       caption="Figure 4: Bare nuclei spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+```{r, warning=FALSE, message=FALSE}
+ggplot(data=plot_data, mapping = aes(x = Class, y = Bland_Chromatin)) +
+  geom_jitter(width = 0.05, height = 0.3, col="cyan", alpha = 0.3) +
+  labs(y="Bland Chromatin", 
+       caption="Figure 5: Bland Chromatin spread per class.") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+ggplot(data=plot_data, mapping = aes(x = Cell_Size_Uniformity, y = Cell_Shape_Uniformity)) +
+  geom_point(aes(col=Class)) +
+  geom_smooth(method = "lm", se = T) +
+  labs(y="Cell Shape Uniformity", x="Cell Size Uniformity", 
+       caption="Figure 6: Plot of the correlation between cell shape and size discrepancies") +
+  theme_minimal() +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+Cell size uniformity and cell shape uniformity (see figure 6) seem to correlate quite a lot, although this correlation seems to wane a little at the higher end. This correlation entails that the larger the differences in size between cells, the larger the differences in shapes as well.
+
+
+\newpage
+
+## Discussion
+
+Most features that have to do with erratic cell growth seem to correlate strongly with the malignancy of the cases of breast cancer, this makes sense as one of the defining aspects of cancer is the abnormal growth and multiplication of cells.
+
+Taking all the results and graphs at face value, one might say cell uniformity is a strong predictor of malignant breast cancer. While this might be the case, some assumptions have to be made in order for us to be able to draw this conclusion. This is because in the user manual the grades (ranging from 1 to 10) are defined as "Completely uniform", followed by an amount of percentages (90% to 10%) and eventualy ending at "Cells are inconsistent with their uniformity". This means that at the very least some rounding has been done, which is automatically a loss of information. It is also unclear how one would measure uniformity for cells in a tissue sample in terms of percentages, or specifically; how these were measured in this study.
+
+The unspecific nature of the data is a glaring issue when it comes to drawing hard conclusions, but assuming the integrity of the data is in order, we may potentially verify the hypothesis.
+
+
+## Conclusion
+
+Barring the accuracy of the data (or rather the potential lack thereof), we can safely conclude that cell uniformity is a good predictor for the malignancy of breast cancer.
+
