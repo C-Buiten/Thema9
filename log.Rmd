@@ -164,10 +164,14 @@ clean_data <- unique(plot_data)
 It is important to get rid of duplicates like these, because they increase the weight of their corresponding attribute values.
 
 As could be seen in the heatmap in figure 7, mitosis has by far the lowest correlation with malignancy and will therefore be removed from the data set. Aside from this, it is also unclear what "abnormal" mitosis means exactly.
-As for the normal nucleoli attribute, its precise definition is unclear. A grade of 1, which is to say a "normal" nucleolus, is defined as being small and barely visible. There is zero clarification, however, of how a nucleolus starts to differ when looking at the higher grades. One can assume that there might then be multiple nucleoli, or they might be larger, but this is never quantified. I deem this too unclear and shall also remove this column from the data set.
+As for the normal nucleoli attribute, its precise definition is unclear. A grade of 1, which is to say a "normal" nucleolus, is defined as being small and barely visible. There is zero clarification, however, of how a nucleolus starts to differ when looking at the higher grades. One can assume that there might then be multiple nucleoli, or they might be larger, but this is never quantified. I deem this too unclear and shall also remove this column from the data set. The ID column has no meaning and can also be removed.
+
 ```{r}
 clean_data$Mitoses <- NULL
 clean_data$Normal_Nucleoli <- NULL
+clean_data$id <- NULL
+# Create new .csv file for use in WEKA
+write.csv(clean_data, "clean_data.csv", row.names = FALSE)
 ```
 
 False positive bad, false negative worse.
