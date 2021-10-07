@@ -170,8 +170,61 @@ As for the normal nucleoli attribute, its precise definition is unclear. A grade
 clean_data$Mitoses <- NULL
 clean_data$Normal_Nucleoli <- NULL
 clean_data$id <- NULL
+clean_data <- na.omit(clean_data)
 # Create new .csv file for use in WEKA
 write.csv(clean_data, "clean_data.csv", row.names = FALSE)
 ```
 
-False positive bad, false negative worse.
+When selecting a machine learning classifier for our specific problem, it is important to keep the weight false positives and negatives in mind. In our case, a false negative might result in a death that may otherwise have been prevented. But a false positive can result in a treatment of a perfectly healthy person that can severely reduce their quality of life. Both of these results can be equally devastating, but it might be prudent to err on the side of caution and preserve as many lives as possible by leaning ever so slightly in the positive direction when forced to make a decision.
+
+### OneR:
+93,0267% correctly classified instances.
+11 false positives.
+36 false negatives.
+
+### VotedPerceptron:
+90,9496% correctly classified instances.
+48 false positives.
+13 false negatives.
+
+### NaiveBayes:
+96.4392% correctly classified instances.
+18 false positives.
+6 false negatives.
+
+### Logistic:
+96.5875% correctly classified instances.
+11 false positives.
+12 false negatives.
+
+### Bagging:
+96.5875% correctly classified instances.
+11 false positives.
+12 false negatives.
+
+Same results requires further commenting.
+
+### CostSensitive Bagging (weighted 1.2 - 1):
+96.2908% correctly classified instances.
+16 false positives.
+9 false negatives.
+
+### CostSensitive Logistic (weighted 1.2 - 1):
+96.7359% correctly classified instances.
+11 false positives.
+11 false negatives.
+
+Still too many false negatives requires further commenting.
+
+### CostSensitive Logistic (weighted 4 - 1):
+97.4777% correctly classified instances.
+13 false positives.
+4 false negatives.
+
+
+
+
+
+
+
+
