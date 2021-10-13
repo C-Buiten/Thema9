@@ -89,7 +89,7 @@ However, it looks like these 3 attributes correlate quite strongly not only with
 
 ```{r}
 ggplot(data=plot_data, mapping = aes(x = Cell_Size_Uniformity, y = Cell_Shape_Uniformity)) +
-  geom_point(aes(col=Class)) +
+  geom_jitter(width = 0.3, height = 0.3, alpha = 0.3, size = 0.5, aes(col=Class)) +
   geom_smooth(method = "lm", se = T) +
   labs(y="Cell Shape Uniformity", x="Cell Size Uniformity", 
        caption="Figure 4: Plot of the correlation between cell shape and size discrepancies") +
@@ -103,7 +103,7 @@ Unsurprisingly, it does seem to be the case that the larger the differences in s
 
 ```{r}
 ggplot(data=plot_data, mapping = aes(x = Cell_Size_Uniformity, y = Bare_Nuclei)) +
-  geom_point(aes(col=Class)) +
+  geom_jitter(width = 0.3, height = 0.3, alpha = 0.3, size = 0.5, aes(col=Class)) +
   geom_smooth(method = "lm", se = T) +
   labs(y="Nuclei With Cytoplasm", x="Cell Size Uniformity", 
        caption="Figure 5: Plot of the correlation between nuclei with cytoplasm and cell size uniformity.") +
@@ -115,7 +115,7 @@ ggplot(data=plot_data, mapping = aes(x = Cell_Size_Uniformity, y = Bare_Nuclei))
 
 ```{r}
 ggplot(data=plot_data, mapping = aes(x = Cell_Shape_Uniformity, y = Bare_Nuclei)) +
-  geom_point(aes(col=Class)) +
+  geom_jitter(width = 0.3, height = 0.3, alpha = 0.3, size = 0.5, aes(col=Class)) +
   geom_smooth(method = "lm", se = T) +
   labs(y="Nuclei With Cytoplasm", x="Cell Shape Uniformity", 
        caption="Figure 6: Plot of the correlation between nuclei with cytoplasm and cell shape uniformity.") +
@@ -202,7 +202,7 @@ When selecting a machine learning classifier for our specific problem, it is imp
 11 false positives.
 12 false negatives.
 
-Same results requires further commenting.
+Logistic and bagging are tied for the highest accuracy, it might be worth it to try both of these algorithms.
 
 ### CostSensitive Bagging (weighted 1.2 - 1):
 96.2908% correctly classified instances.
@@ -214,14 +214,14 @@ Same results requires further commenting.
 11 false positives.
 11 false negatives.
 
-Still too many false negatives requires further commenting.
+The accuracy seems to have improved, particularly for the logistic algorithm, but there are quite a few false negatives, something we wish to avoid.
 
 ### CostSensitive Logistic (weighted 4 - 1):
 97.4777% correctly classified instances.
 13 false positives.
 4 false negatives.
 
-
+By increasing the cost of false negatives even further we managed to increase the accuracy some more and reduce the amount of false negatives by 7, with the price of additional false positives.
 
 
 
