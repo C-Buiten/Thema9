@@ -5,10 +5,6 @@ date: "11/2/2021"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
@@ -37,7 +33,12 @@ clean_data$id <- NULL
 ## Research question
 Is cell uniformity (shape and size) a good predictor for the malignancy of breast cancer?
 
+\tableofcontents
+\newpage
 
+## Introduction
+
+## Materials & Methods
 
 ## Results
 
