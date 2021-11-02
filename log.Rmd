@@ -9,6 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(reshape2)
+library(ggpubr)
 ```
 
 \newpage
@@ -223,8 +224,30 @@ The accuracy seems to have improved, particularly for the logistic algorithm, bu
 
 By increasing the cost of false negatives even further we managed to increase the accuracy some more and reduce the amount of false negatives by 7, with the price of additional false positives.
 
+```{r}
+roc_data <- read.table("~/Desktop//Thema9/ROC.arff", sep = ",", comment.char = "@")
+names(roc_data) <- c("Instance_number", "True_Positives", "False_Negatives", "False_Positives", "True_Negatives",
+                 "False_Positive_Rate", "True_Positive_Rate", "Precision", "Recall", "Fallout", "FMeasure",
+                 "Sample_Size", "Lift", "Threshold")
 
-
-
+colors <- c(classifier = "red", threshold = "blue")
+plt <- ggplot(data = roc_data,
+       mapping = aes(x = False_Positive_Rate, y = True_Positive_Rate)) +
+    geom_point(mapping = aes(color = "classifier")) +
+    geom_abline(aes(color = "threshold", 
+                    slope = 1, 
+                    intercept = 0)) + 
+    scale_color_manual(values = colors) +
+    labs(y="True Positive Rate", x="False Positive Rate",
+       caption="Figure 9: ROC-Curve of model using a cost-sensitive logistic classifier.") +
+    xlab("False Positive Rate") +
+    ylab("True Positive Rate") +
+    theme_minimal() +
+    theme(legend.title = element_blank(),
+          plot.caption.position = "plot",
+          plot.caption = element_text(hjust = 0.5))
+print(plt)
+```
+The ROC-Curve shown in figure 0 shows the performance of the model using a cost-sensitive logistic classifier with a valuation of 4 to 1. It shows that the model performs quite well and is slightly more sensitive than it is specific, which is exactly the compromise I set out to make during my evaluation of the ramifications of false positives and false negatives on the to-be-diagnosed patient.
 
 
