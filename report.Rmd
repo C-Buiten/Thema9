@@ -33,12 +33,25 @@ clean_data$id <- NULL
 ## Research question
 Is cell uniformity (shape and size) a good predictor for the malignancy of breast cancer?
 
+## Abstract
+
+\newpage
 \tableofcontents
 \newpage
 
+
 ## Introduction
 
+### Theory
+
+### Objective
+
+
 ## Materials & Methods
+
+### Materials
+
+### Methods
 
 ## Results
 
@@ -119,7 +132,11 @@ Cell size uniformity and cell shape uniformity (see figure 6) seem to correlate 
 
 \newpage
 
-## Discussion
+## Discussion & Conclusion
+
+### Discussion
+
+Murky murky onzekerheid 50%
 
 Most features that have to do with erratic cell growth seem to correlate strongly with the malignancy of the cases of breast cancer, this makes sense as one of the defining aspects of cancer is the abnormal growth and multiplication of cells.
 
@@ -128,7 +145,7 @@ Taking all the results and graphs at face value, one might say cell uniformity i
 The unspecific nature of the data is a glaring issue when it comes to drawing hard conclusions, but assuming the integrity of the data is in order, we may potentially verify the hypothesis.
 
 
-## Conclusion
+### Conclusion
 
 Barring the accuracy of the data (or rather the potential lack thereof), we can safely conclude that cell uniformity is a good predictor for the malignancy of breast cancer.
 

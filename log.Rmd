@@ -230,7 +230,7 @@ names(roc_data) <- c("Instance_number", "True_Positives", "False_Negatives", "Fa
                  "False_Positive_Rate", "True_Positive_Rate", "Precision", "Recall", "Fallout", "FMeasure",
                  "Sample_Size", "Lift", "Threshold")
 
-colors <- c(classifier = "red", threshold = "blue")
+colors <- c(classifier = "darkturquoise", threshold = "salmon1")
 plt <- ggplot(data = roc_data,
        mapping = aes(x = False_Positive_Rate, y = True_Positive_Rate)) +
     geom_point(mapping = aes(color = "classifier")) +
