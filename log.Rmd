@@ -248,6 +248,6 @@ plt <- ggplot(data = roc_data,
           plot.caption = element_text(hjust = 0.5))
 print(plt)
 ```
-The ROC-Curve shown in figure 0 shows the performance of the model using a cost-sensitive logistic classifier with a valuation of 4 to 1. It shows that the model performs quite well and is slightly more sensitive than it is specific, which is exactly the compromise I set out to make during my evaluation of the ramifications of false positives and false negatives on the to-be-diagnosed patient.
+The ROC-Curve shown in figure 9 shows the performance of the model using a cost-sensitive logistic classifier with a valuation of 4 to 1. It shows that the model performs quite well and is slightly more sensitive than it is specific, which is exactly the compromise I set out to make during my evaluation of the ramifications of false positives and false negatives on the to-be-diagnosed patient.
 
 
