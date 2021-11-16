@@ -30,8 +30,6 @@ clean_data$id <- NULL
 
 ```
 
-## Research question
-Is cell uniformity (shape and size) a good predictor for the malignancy of breast cancer?
 
 ## Abstract
 
@@ -43,8 +41,10 @@ Is cell uniformity (shape and size) a good predictor for the malignancy of breas
 ## Introduction
 
 ### Theory
+Breast cancer is, as the name suggests, a type of cancer that starts in the breast. One of the early signs of cancer is cell growth that is out of control, the resulting lumps do not always have to be malignant and are sometimes nothing to be worried about. Other times, however, these lumps are malignant and are, or increase the likelyhood of, cancer. It is for these types of lumps that it is extremely important to be able to determine early on whether or not this lump may result in potential life threatening situations later down the line. One way of handling the diagnosis of patients whose breast tissue is being examined is by looking at the breast tissue and examining the cells for specific characteristics. These include but are not limited to cell uniformity, rate of mitosis and the presence (or lack thereof) of cytoplasm in the nucleus.
 
 ### Objective
+The data used in this research contains 9 such characteristics, each of which has been graded by an examining doctor on a scale of 1 to 10, with 1 being the least cause for concern and 10 being the highest chance of malignancy. While the goal was initially to merely automate the evaluation of all the grades through machine learning as opposed to by hand for each case, this research also aims to reduce the amount of characteristics (or attributes in machine learning terms) needed for a full diagnosis with a focus on preventing as many false negatives as possible, as this would expedite the process of tissue analysism. Ideally, a doctor would only have to look at a couple of aspects of the cells in the examined tissue, which would massively reduce the relative workload of any such examination. 
 
 
 ## Materials & Methods
