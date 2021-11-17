@@ -203,7 +203,7 @@ When selecting a machine learning classifier for our specific problem, it is imp
 11 false positives.
 12 false negatives.
 
-Logistic and bagging are tied for the highest accuracy, it might be worth it to try both of these algorithms.
+Logistic and bagging are tied for the highest accuracy, it might be worth it to try further experimentation with both of these algorithms.
 
 ### CostSensitive Bagging (weighted 1.2 - 1):
 96.2908% correctly classified instances.

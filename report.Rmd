@@ -42,7 +42,9 @@ clean_data$id <- NULL
 ## Introduction
 
 ### Theory
-Breast cancer is, as the name suggests, a type of cancer that starts in the breast. One of the early signs of cancer is cell growth that is out of control, the resulting lumps do not always have to be malignant and are sometimes nothing to be worried about. Other times, however, these lumps are malignant and are, or increase the likelyhood of, cancer. It is for these types of lumps that it is extremely important to be able to determine early on whether or not this lump may result in potential life threatening situations later down the line. One way of handling the diagnosis of patients whose breast tissue is being examined is by looking at the breast tissue and examining the cells for specific characteristics. These include but are not limited to cell uniformity, rate of mitosis and the presence (or lack thereof) of cytoplasm in the nucleus.
+Breast cancer is, as the name suggests, a type of cancer that starts in the breast. One of the early signs of cancer is cell growth that is out of control, the resulting lumps do not always have to be malignant and are sometimes nothing to be worried about. Other times, however, these lumps are malignant and are, or increase the likelyhood of, cancer. It is for these types of lumps that it is extremely important to be able to determine early on whether or not this lump may result in potential life threatening situations later down the line. One way of handling the diagnosis of patients whose breast tissue is being examined is by looking at the breast tissue and examining the cells for specific characteristics. These include but are not limited to cell uniformity, rate of mitosis and the presence (or lack thereof) of cytoplasm in the nucleus.  
+
+
 
 ### Objective
 The data used in this research contains 9 such characteristics, each of which has been graded by an examining doctor on a scale of 1 to 10, with 1 being the least cause for concern and 10 being the highest chance of malignancy. While the goal was initially the mere automation of the evaluation of all the grades through machine learning as opposed to by hand for each case, this research also aims to reduce the amount of characteristics (or attributes in machine learning terms) needed for a full diagnosis with a focus on preventing as many false negatives as possible, as this would expedite the process of tissue analysism. Ideally, a doctor would only have to look at a couple of aspects of the cells in the examined tissue, which would massively reduce the relative workload of any such examination. To this end, a viable combination of attributes has to be found with acceptable model accuracy.
@@ -54,6 +56,9 @@ The data used in this research contains 9 such characteristics, each of which ha
 The code and methodology described in this section can be found in the following two git repositories:  
 [Research Repository](https://github.com/C-Buiten/Thema9) (R Visualizations and logs).  
 [Code Repository](https://github.com/C-Buiten/Thema9_Wrapper) (Java wrapper for the (re-)application of the machine learning model).  
+
+The user manual for the data can be found by clicking the following link:
+[User Manual](https://www.rai-light.com/docs/BCD_User_Manual_v01.pdf).  
 
 ### Materials
 The data used in this research was comprised of cell data of 698 different patients. For each of these patients, 9 grades (on a scale from 1 to 10) were given, one grade for each of the following tissue attributes: Clump thickness, cell size uniformity, cell shape uniformity, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal_nucleoli and mitoses. For each of these attributes 1 was considered the closest to normal and 10 the most abnormal or cancer-like. For the cleaning and visualizing of the data R was used in conjunction with ggplot2 for the making of graphs. The machine learning algorithms were tested and applied through weka. The resulting model was then wrapped inside a Java application for reproduction purposes.
@@ -68,7 +73,12 @@ Java       14.0.2
 
 Table: Table of the used software versions.
 
+
 ### Methods
+Before beginning the modeling in weka, the dataset had to be cleaned first. All entries containing missing values were removed, as were the attributes mitoses and normal nucleoli and the column containing arbitrary patient ID numbers as these were of no concern for the model. Mitoses and normal nucleoli were both removed on account of them having a low correlation with the target class and being ill-defined in the user manual.  
+
+The cleaned up data was then exported to weka, whose selection of classifiers were then tested on the newly cleaned data. The most notable of these classifiers were OneR, VotedPerceptron, NaiveBayes, Logistic and Bagging. The last two performed equally well and also outperformed all the others. As such, these were then used for further testing with a cost sensitive classifier, as the most meaningful improvement to their already high performance at the time was deemed the reduction of false negatives. When both these classifiers were used in a situation where false negatives outweighed false positives with a factor of 1.2 to 1, the logistic classifer saw the biggest improvement. The logistic classifier was then tried out with a cost ratio of 4 to 1, which improved its performance even further. Any increase in weight at this point was detrimental to its performance and as such this setup was the classifier that was settled on for the final model. This model was then exported and integrated in a java wrapper.
+
 
 ## Results
 
