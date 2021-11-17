@@ -225,7 +225,7 @@ The accuracy seems to have improved, particularly for the logistic algorithm, bu
 By increasing the cost of false negatives even further we managed to increase the accuracy some more and reduce the amount of false negatives by 7, with the price of additional false positives.
 
 ```{r}
-roc_data <- read.table("~/Desktop//Thema9/ROC.arff", sep = ",", comment.char = "@")
+roc_data <- read.table("ROC.arff", sep = ",", comment.char = "@")
 names(roc_data) <- c("Instance_number", "True_Positives", "False_Negatives", "False_Positives", "True_Negatives",
                  "False_Positive_Rate", "True_Positive_Rate", "Precision", "Recall", "Fallout", "FMeasure",
                  "Sample_Size", "Lift", "Threshold")

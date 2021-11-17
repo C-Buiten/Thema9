@@ -65,7 +65,7 @@ The data used in this research was comprised of cell data of 698 different patie
 
 Software   Version    
 --------   --------------
-Weka       3.9
+Weka       3.8
 R          3.6.3 
 ggplot2    3.3.5
 Java       14.0.2
@@ -164,6 +164,7 @@ Cell size uniformity and cell shape uniformity (see figure 6) seem to correlate 
 ### Discussion
 
 Murky murky onzekerheid 50% false positives/negatives/uitgewisseld
+enkel goedkeuren van arts zijn expertise
 
 Most features that have to do with erratic cell growth seem to correlate strongly with the malignancy of the cases of breast cancer, this makes sense as one of the defining aspects of cancer is the abnormal growth and multiplication of cells.
 
