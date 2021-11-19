@@ -189,40 +189,40 @@ When selecting a machine learning classifier for our specific problem, it is imp
 13 false negatives.
 
 ### NaiveBayes:
-96.4392% correctly classified instances.
+96,4392% correctly classified instances.
 18 false positives.
 6 false negatives.
 
 ### Logistic:
-96.5875% correctly classified instances.
+96,5875% correctly classified instances.
 11 false positives.
 12 false negatives.
 
 ### Bagging:
-96.5875% correctly classified instances.
+96,5875% correctly classified instances.
 11 false positives.
 12 false negatives.
 
-Logistic and bagging are tied for the highest accuracy, it might be worth it to try further experimentation with both of these algorithms.
+Logistic and bagging are tied for the highest accuracy, it might be worth it to try further experimentation with both of these algorithms. Especially to try and reduce the false negatives to below the NaiveBayes benchmark of 6.
 
 ### CostSensitive Bagging (weighted 1.2 - 1):
-96.2908% correctly classified instances.
+96,2908% correctly classified instances.
 16 false positives.
 9 false negatives.
 
 ### CostSensitive Logistic (weighted 1.2 - 1):
-96.7359% correctly classified instances.
+96,7359% correctly classified instances.
 11 false positives.
 11 false negatives.
 
-The accuracy seems to have improved, particularly for the logistic algorithm, but there are quite a few false negatives, something we wish to avoid.
+The accuracy seems to have improved for the logistic algorithm, but there are still quite a few false negatives, something we wish to avoid. Bagging actually saw a decrease in performance.
 
 ### CostSensitive Logistic (weighted 4 - 1):
-97.4777% correctly classified instances.
+97,4777% correctly classified instances.
 13 false positives.
 4 false negatives.
 
-By increasing the cost of false negatives even further we managed to increase the accuracy some more and reduce the amount of false negatives by 7, with the price of additional false positives.
+By increasing the cost of false negatives even further we managed to increase the accuracy some more and reduce the amount of false negatives by 7, with the price of 2 additional false positives. This brings the total false negatives to even below NaiveBayes' impressive 6.
 
 ```{r}
 roc_data <- read.table("ROC.arff", sep = ",", comment.char = "@")
@@ -250,4 +250,13 @@ print(plt)
 ```
 The ROC-Curve shown in figure 9 shows the performance of the model using a cost-sensitive logistic classifier with a valuation of 4 to 1. It shows that the model performs quite well and is slightly more sensitive than it is specific, which is exactly the compromise I set out to make during my evaluation of the ramifications of false positives and false negatives on the to-be-diagnosed patient.
 
+Let's create some test data for the java wrapper:
+```{r}
+library(farff)
+new_data <- clean_data
+# Empty the class column so it can be refilled by the classifier.
+new_data$Class <- NA
+writeARFF(new_data, "test.arff")
+```
+The test data works as intended and gives proper output.
 

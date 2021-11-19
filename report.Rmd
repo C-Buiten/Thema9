@@ -33,6 +33,9 @@ clean_data$id <- NULL
 
 
 ## Abstract
+The objective of this research is to automate the diagnosis of breast cancer through the use of a machine learning algorithm and to reduce the amount of false negatives given in these diagnoses. It also aims to reduce the amount of input data required to provide such a diagnosis. A false negative is the event in which the diagnosis of benign cancer is given where in reality the cancer is malignant. A misdiagnosed case like this can me immensely detrimental to the condition of a patient.
+Multiple classifiers found in the Weka datamining tool were tested in order to figure out the best algorithm for the job. Of all these algorithms, a cost sensitive logistic regression algorithm proved to be the most accurate, indicating that the resulting model is potentially a good supplement in making the diagnoses for patients suffering from breast cancer.
+
 
 \newpage
 \tableofcontents
@@ -42,12 +45,12 @@ clean_data$id <- NULL
 ## Introduction
 
 ### Theory
-Breast cancer is, as the name suggests, a type of cancer that starts in the breast. One of the early signs of cancer is cell growth that is out of control, the resulting lumps do not always have to be malignant and are sometimes nothing to be worried about. Other times, however, these lumps are malignant and are, or increase the likelyhood of, cancer. It is for these types of lumps that it is extremely important to be able to determine early on whether or not this lump may result in potential life threatening situations later down the line. One way of handling the diagnosis of patients whose breast tissue is being examined is by looking at the breast tissue and examining the cells for specific characteristics. These include but are not limited to cell uniformity, rate of mitosis and the presence (or lack thereof) of cytoplasm in the nucleus.  
+Breast cancer\cite{Cancer} is, as the name suggests, a type of cancer that starts in the breast. One of the early signs of cancer is cell growth that is out of control, the resulting lumps do not always have to be malignant and are sometimes nothing to be worried about. Other times, however, these lumps are malignant and are, or increase the likelyhood of, cancer. It is for these types of lumps that it is extremely important to be able to determine early on whether or not this lump may result in potential life threatening situations later down the line. One way of handling the diagnosis of patients whose breast tissue is being examined is by looking at the breast tissue and examining the cells for specific characteristics. These include but are not limited to cell uniformity, rate of mitosis and the presence (or lack thereof) of cytoplasm in the nucleus.  
 
 
 
 ### Objective
-The data used in this research contains 9 such characteristics, each of which has been graded by an examining doctor on a scale of 1 to 10, with 1 being the least cause for concern and 10 being the highest chance of malignancy. While the goal was initially the mere automation of the evaluation of all the grades through machine learning as opposed to by hand for each case, this research also aims to reduce the amount of characteristics (or attributes in machine learning terms) needed for a full diagnosis with a focus on preventing as many false negatives as possible, as this would expedite the process of tissue analysism. Ideally, a doctor would only have to look at a couple of aspects of the cells in the examined tissue, which would massively reduce the relative workload of any such examination. To this end, a viable combination of attributes has to be found with acceptable model accuracy.
+The data used in this research contains 9 such characteristics, each of which has been graded by an examining doctor on a scale of 1 to 10, with 1 being the least cause for concern and 10 being the highest chance of malignancy. While the goal was initially the mere automation of the evaluation of all the grades through machine learning as opposed to by hand for each case, this research also aims to reduce the amount of characteristics (or attributes in machine learning terms) needed for a full diagnosis with a focus on preventing as many false negatives as possible, as this would expedite the process of tissue analysism. Ideally, a doctor would only have to look at a couple of aspects of the cells in the examined tissue, which would massively reduce the relative workload of any such examination. To this end, a viable combination of attributes has to be found with acceptable model accuracy. It is also important to determine which of the available machine learning algorithms is the most suitable for the job. These goals could be summarized in the following question: "What machine learning algorithm can automize the diagnosis of breast cancer patients the best, taking into special consideration the avoidance of false negative reports and the reduction of the amount of data that is necessary to be gathered by doctors?"
 
 \newpage
 
@@ -61,7 +64,7 @@ The user manual for the data can be found by clicking the following link:
 [User Manual](https://www.rai-light.com/docs/BCD_User_Manual_v01.pdf).  
 
 ### Materials
-The data used in this research was comprised of cell data of 698 different patients. For each of these patients, 9 grades (on a scale from 1 to 10) were given, one grade for each of the following tissue attributes: Clump thickness, cell size uniformity, cell shape uniformity, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal_nucleoli and mitoses. For each of these attributes 1 was considered the closest to normal and 10 the most abnormal or cancer-like. For the cleaning and visualizing of the data R was used in conjunction with ggplot2 for the making of graphs. The machine learning algorithms were tested and applied through weka. The resulting model was then wrapped inside a Java application for reproduction purposes.
+The data used in this research was comprised of cell data of 698 different patients and was provided by Dr. William H. Wolberg from the University of Winconsin Hospitals. For each of these patients, 9 grades (on a scale from 1 to 10) were given, one grade for each of the following tissue attributes: Clump thickness, cell size uniformity, cell shape uniformity, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal_nucleoli and mitoses. For each of these attributes 1 was considered the closest to normal and 10 the most abnormal or cancer-like. For the cleaning and visualizing of the data R was used in conjunction with ggplot2 for the making of graphs. The machine learning algorithms were tested and applied through weka. The resulting model was then wrapped inside a Java application for reproduction purposes.
 
 Software   Version    
 --------   --------------
@@ -69,9 +72,9 @@ Weka       3.8
 R          3.6.3 
 ggplot2    3.3.5
 Java       14.0.2
----------  --------------
+--------   --------------
 
-Table: Table of the used software versions.
+Table: Used software versions.
 
 
 ### Methods
@@ -100,7 +103,7 @@ clean_data$Class[clean_data$Class == 2] <- "B"
 clean_data$Class[clean_data$Class == 4] <- "M"
 ```
 
-As can be seen in figure 1, there are 4 attributes that correlate with malignancy (class) for more than 75%, 2 of which are pertaining to cell uniformity. These attributes are cell size uniformity, cell shape uniformity, bare nuclei and bland chromatin. The spreads for these attributes can be seen in figures 2 through 5.
+As can be seen in figure 1, there are 4 attributes that correlate with malignancy (class) for more than 75%, 2 of which are pertaining to cell uniformity. These attributes are cell size uniformity, cell shape uniformity, bare nuclei and bland chromatin. The spreads for these attributes can be seen in figures 2 through 5. Note that the previously lowest scoring attributes were removed; mitoses and normal nucleoli, on account of both their low correlation and their ambiguous user manual descriptions.
 
 ```{r, warning=FALSE, message=FALSE}
 ggplot(data=clean_data, mapping = aes(x = Class, y = Cell_Size_Uniformity)) +
@@ -111,6 +114,7 @@ ggplot(data=clean_data, mapping = aes(x = Class, y = Cell_Size_Uniformity)) +
   theme(plot.caption.position = "plot",
         plot.caption = element_text(hjust = 0.5))
 ```
+What can be seen in figure 2 is that the cell size uniformity attribute has 2 clear clusters at both extremes, particular the one at the lower scoring end. While there is some overlap in the 2.5 to 4.5 range, most of the spread seems to account for malignancy pretty well.
 
 ```{r, warning=FALSE, message=FALSE}
 ggplot(data=clean_data, mapping = aes(x = Class, y = Cell_Shape_Uniformity)) +
@@ -121,6 +125,7 @@ ggplot(data=clean_data, mapping = aes(x = Class, y = Cell_Shape_Uniformity)) +
   theme(plot.caption.position = "plot",
         plot.caption = element_text(hjust = 0.5))
 ```
+The picture painted by cell shape uniformity is much the same as that of cell size, albeit slightly more gradual than the scaling shown by figure 2. Much like in figure 2, though, we can see most of the overlap occurring at the 2.5 to 4.5 range.
 
 ```{r, warning=FALSE, message=FALSE}
 ggplot(data=clean_data, mapping = aes(x = Class, y = Bare_Nuclei)) +
@@ -131,6 +136,7 @@ ggplot(data=clean_data, mapping = aes(x = Class, y = Bare_Nuclei)) +
   theme(plot.caption.position = "plot",
         plot.caption = element_text(hjust = 0.5))
 ```
+Perhaps more surprisingly, the bare nuclei attribute too shows a similar spread to those of the cell uniformities. What does stand out, however, is the overlap occurring not between 2.5 to 4.5, but instead reaching up to grades of 5. Bare nuclei does seem to have a more strongly defined cluster at the higher (malignant) end.
 
 ```{r, warning=FALSE, message=FALSE}
 ggplot(data=clean_data, mapping = aes(x = Class, y = Bland_Chromatin)) +
@@ -141,7 +147,7 @@ ggplot(data=clean_data, mapping = aes(x = Class, y = Bland_Chromatin)) +
   theme(plot.caption.position = "plot",
         plot.caption = element_text(hjust = 0.5))
 ```
-
+Bland chromatin seems to lack a clear cluster at the higher end, instead appearing to show a wider spread at the 7 to 10 range. What also stands out is that the 1 to 3 range is clearly dominated by benign cases, but 3 is also the grade where the results become a bit murky, also showing strong increase in malignant cases.
 
 ```{r, warning=FALSE, message=FALSE}
 ggplot(data=clean_data, mapping = aes(x = Cell_Size_Uniformity, y = Cell_Shape_Uniformity)) +
@@ -156,6 +162,60 @@ ggplot(data=clean_data, mapping = aes(x = Cell_Size_Uniformity, y = Cell_Shape_U
 
 Cell size uniformity and cell shape uniformity (see figure 6) seem to correlate quite a lot, although this correlation seems to wane a little at the higher end. This correlation entails that the larger the differences in size between cells, the larger the differences in shapes as well.
 
+\newpage
+
+Algorithm         Accuracy    False Negatives   False Positives
+---------------   --------    ---------------   ---------------
+OneR              93,0267%    36                11
+VotedPerceptron   90,9496%    13                48
+NaiveBayes        96,4392%    6                 18
+Logistic          96,5875%    12                11
+Bagging           96,5875%    12                11
+---------------   --------    ---------------   ---------------
+
+Table: First model trial performances.
+
+
+A few notable things from table 2 are that while the base performance of the voted perceptron is not as impressive as the top three and does not even hold up to OneR, but it does significantly cut down on false negatives, something that we value. NaiveBayes has a higher accuracy, only just falling short of the two highest scoring algorithms and also only having 6 false negatives.
+
+
+Algorithm   Cost Ratio   Accuracy   False Negatives   False Positives
+---------   ----------   --------   ---------------   ---------------
+Logistic    1.2 ~ 1      96,7359%   11                11
+Bagging     1.2 ~ 1      96,2908%   9                 16
+Logistic    4 ~ 1        97,4777%   4                 13
+---------   ----------   --------   ---------------   ---------------
+
+Table: Cost sensitive performances, showing the cost of false negatives ~ false positives.
+
+After introducing weighted costs to the algorithms, logistic eventually managed to increase its accuracy to 97,4777% and even reducing the false negatives to 4, even below the previous lowest of 6 shown by NaiveBayes. Cost sensitive bagging did reduce its false negatives by 3, but saw a reduction in overall accuracy.
+
+```{r}
+roc_data <- read.table("ROC.arff", sep = ",", comment.char = "@")
+names(roc_data) <- c("Instance_number", "True_Positives", "False_Negatives", "False_Positives", "True_Negatives",
+                 "False_Positive_Rate", "True_Positive_Rate", "Precision", "Recall", "Fallout", "FMeasure",
+                 "Sample_Size", "Lift", "Threshold")
+
+colors <- c(classifier = "darkturquoise", threshold = "salmon1")
+plt <- ggplot(data = roc_data,
+       mapping = aes(x = False_Positive_Rate, y = True_Positive_Rate)) +
+    geom_point(mapping = aes(color = "classifier")) +
+    geom_abline(aes(color = "threshold", 
+                    slope = 1, 
+                    intercept = 0)) + 
+    scale_color_manual(values = colors) +
+    labs(y="True Positive Rate", x="False Positive Rate",
+       caption="Figure 7: ROC-Curve of model using a cost-sensitive logistic classifier.") +
+    xlab("False Positive Rate") +
+    ylab("True Positive Rate") +
+    theme_minimal() +
+    theme(legend.title = element_blank(),
+          plot.caption.position = "plot",
+          plot.caption = element_text(hjust = 0.5))
+print(plt)
+```
+
+The ROC-Curve in figure 7 shows that the algorithm overal performs quite well and that the model is slightly more sensitive than it is specific, which should result in the model seeing fewer false negatives than false positives, since the model is more inclined to provide a positive diagnosis.
 
 \newpage
 
@@ -163,17 +223,38 @@ Cell size uniformity and cell shape uniformity (see figure 6) seem to correlate 
 
 ### Discussion
 
-Murky murky onzekerheid 50% false positives/negatives/uitgewisseld
-enkel goedkeuren van arts zijn expertise
-
 Most features that have to do with erratic cell growth seem to correlate strongly with the malignancy of the cases of breast cancer, this makes sense as one of the defining aspects of cancer is the abnormal growth and multiplication of cells.
 
-Taking all the results and graphs at face value, one might say cell uniformity is a strong predictor of malignant breast cancer. While this might be the case, some assumptions have to be made in order for us to be able to draw this conclusion. This is because in the user manual the grades (ranging from 1 to 10) are defined as "Completely uniform", followed by an amount of percentages (90% to 10%) and eventually ending at "Cells are inconsistent with their uniformity". This means that at the very least some rounding has been done, which is automatically a loss of information. It is also unclear how one would measure uniformity for cells in a tissue sample in terms of percentages, or specifically; how these were measured in this study.
+Taking all the results and graphs at face value, one might say cell uniformity alone is a strong predictor of malignant breast cancer. While this might be the case, some assumptions have to be made in order for us to be able to draw this conclusion. This is because in the user manual the grades (ranging from 1 to 10) are defined as "Completely uniform", followed by an amount of percentages (90% to 10%) and eventually ending at "Cells are inconsistent with their uniformity". This means that at the very least some rounding has been done, which is automatically a loss of information. It is also unclear how one would measure uniformity for cells in a tissue sample in terms of percentages, or specifically; how these were measured in the gathering of all the patient data.
 
-The unspecific nature of the data is a glaring issue when it comes to drawing hard conclusions, but assuming the integrity of the data is in order, we may potentially verify the hypothesis.
+It might also be prudent to aggregate cell size and shape uniformity into one attribute called cell uniformity, based on their strong correlation.
 
+The unspecific nature of the data could be a glaring issue when it comes to drawing hard conclusions, but this is also the very nature of the task at hand; providing a machine-learning-assisted-diagnosis based on the observations of a doctor.
+
+The issue of the input data being subjective (in that they are provided through the grading by a doctor) can only be truly circumvented by forgoing the usage of grades and instead opting for measured values. 
+
+Most mistaken diagnoses occur in the "grey area", where the attribute gradings are more central and overlap between benign and malignant. For these cases where some mistakes are unavoidable, risk assessments have to be made. While it is very important to avoid false negatives, it also cannot go unsaid that in the event of an uncertain diagnosis, a patient can always make their own well thought out decision.
+
+\newpage
 
 ### Conclusion
 
-Barring the accuracy of the data (or rather the potential lack thereof), we can safely conclude that cell uniformity is a good predictor for the malignancy of breast cancer.
+What machine learning algorithm can automize the diagnosis of breast cancer patients the best, taking into special consideration the avoidance of false negative reports and the reduction of the amount of data that is necessary to be gathered by doctors?
 
+Out of all the algorithms that were tested, a cost sensitive logistic regression algorithm had the best performance, having an accuracy of 97,4777% and a very low false negative count. This performance is despite dropping two attributes; normal nucleoli, which is based on the appearance of the nucleoli found in the cells, and mitoses, which had to do with the mitosis rate.
+
+Promising as these results may be, it remains to be seen whether the model holds up to more data, as there was little data available for testing. It should also be interesting to investigate whether such a model would succeed at providing diagnoses based on measured values as opposed to graded observations. While functionally the model would technically do its job, it is unknown how it would perform in terms of accuracy.
+
+While one could argue that a model such as this only serves to confirm what a doctor has already observed, it does take the risk assessment of a diagnosis out of their hands and gives a result that is based on probabilities. It must also be noted that for cases where a diagnosis is not quite as certain as you would like it to be, the doctor and their patient can of course discuss about what is most wise. The model can be used as a supplement, it does not have to, (and should not) overrule what a doctor or a patient themselves has to say.
+
+\newpage
+
+\begin{thebibliography}{9}
+
+\bibitem{Cancer}
+\textit{Cancer}. (2021). \textit{What is breast cancer?}. Consulted on November 17th, 2021, from \\\texttt{https://www.cancer.org/cancer/breast-cancer/about/what-is-breast-cancer.html}.
+
+\end{thebibliography}
+
+[2] User Manual. (2021). Consulted throughout the project, 2021, from  
+https://www.rai-light.com/docs/BCD_User_Manual_v01.pdf.
